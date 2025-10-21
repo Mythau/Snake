@@ -7,12 +7,13 @@ s = 115			right arrow =	77*/
 
 #include <iostream>
 #include <conio.h>
+#include <windows.h>
 
 int WaitPeriod = 1000;
 int Gamestate = 0;
 int SnakeLength = 3;
-int MapHeight = 20;
-int MapWidth = 20;
+const int MapHeight = 20;
+const int MapWidth = 20;
 
 void GameSpeed()
 {
@@ -30,17 +31,32 @@ class GameMap
 		int PersistenceDuration = 0; //int countdown to delete the tail of the snake once the correct number of ticks/movement has passed
 	};
 
-	GamePlane m_GamePlaneCartesian[10][10]; //a baby text based "frame" buffer
+	GamePlane GamePlaneCartesian[MapHeight][MapWidth]; //creates a baby text based "frame" buffer
+
+	void PrintGame(const char message, int NewLnChk) //add colour changes etc later. too much mucking around not enough inputting game logic.
+	{
+		//HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		//SetConsoleTextAttribute(hConsole, 128);
+		if (NewLnChk == 20)
+		{
+			std::cout << message << std::endl;
+			//SetConsoleTextAttribute(hConsole, 7);
+		}
+		else
+		{
+			std::cout << message;
+			//SetConsoleTextAttribute(hConsole, 7);
+		}
+	}
 
 	void PrintMap() 
 	{
 		for (int i = MapHeight; i > 0; i--)
 		{
-			for (int j = MapWidth; j < 10; j++)
+			for (int j = 0; j < MapWidth; j++)
 			{
-				std::cout << m_GamePlaneCartesian[i][j].x;
+					PrintGame(GamePlaneCartesian[i][j].x, j);
 			};
-			std::cout << std::endl;
 		};
 	};
 };
