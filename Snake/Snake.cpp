@@ -1,24 +1,18 @@
 #include <chrono>
 #include <iostream>
+#include <windows.h>
+#include <thread>
 #include "Header.h"
 
 
+bool running = true;
 
 int main()
 {
-
-	GameMap MapMeDaddy;
-	MapMeDaddy.PrintMap();
-
-
-
-
-
-/*	while (GameOver != true)
+	
+	while (running)
 	{
-		run gamestate
-			std::this_thread::sleep_for(std::chrono::milliseconds(WaitPeriod));
+		std::this_thread::sleep_for(std::chrono::milliseconds(WaitPeriod));
+	};
 
-	}
-*/
 }
