@@ -1,10 +1,3 @@
-/* ascii codes as follows, tested on same system. _getch is platform specific to win.
-w = 119			up arrow =		72
-a = 97			down arrow =	80
-d = 100			left arrow =	75
-s = 115			right arrow =	77*/
-
-
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
@@ -14,12 +7,23 @@ s = 115			right arrow =	77*/
 
 enum Direction { Up, Down, Left, Right };
 Direction DirMov;
+
 long long WaitPeriod = 1000;
 const int MapHeight = 20;
 const int MapWidth = 20;
 int SnakeLength = 3;
 bool GameOver = false;
 
+int NumberGen(int NumGen, int LowerRange, int UpperRange)
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> distrib(LowerRange, UpperRange);
+	NumGen = distrib(gen);
+	return NumGen;
+};
+//for some reason the syntax is WILDLY picky about where this is in the program. up the top called in a function appears to be
+//the safest bet. colour me confused. fiddlesticks.
 
 void GameSpeed()
 {
@@ -55,13 +59,13 @@ CellEntity EntityMap[MapWidth][MapHeight];
 
 class SnakeHead :public CellEntity
 {
-	int xcoord = 10;
-	int ycoord = 10;
+	int HeadXCoord = 10;
+	int HeadYCoord = 10;
 
 	void HeadPosition()
 	{
-		EntityMap[xcoord][ycoord].DisplayChar = '@';
-		EntityMap[xcoord][ycoord].DecayTimer = SnakeLength;
+		EntityMap[HeadXCoord][HeadYCoord].DisplayChar = '@';
+		EntityMap[HeadXCoord][HeadYCoord].DecayTimer = SnakeLength;
 	};
 
 	void HeadMove()
@@ -77,40 +81,48 @@ class SnakeHead :public CellEntity
 
 	//following functions check to make sure it doesnt travel out of bounds & collision detection with it's body
 
+	void GameOverCheck()
+	{
+		if (HeadYCoord < 0 || HeadYCoord > 20 || HeadXCoord < 0 || HeadXCoord > 20 || EntityMap[HeadXCoord][HeadYCoord].DecayTimer != 0) 
+		{ GameOver = true; } //I wonder if this needs a return 0;? either way it breaks the game loop.
+	}
 
 	void MoveUp()
 	{
-		ycoord++;
-		if (ycoord > 20 || ycoord < 0  || EntityMap[xcoord][ycoord].DecayTimer != 0) { GameOver = true; }
+		HeadYCoord++;
+		GameOverCheck();
 	}
 	void MoveDown()
 	{
-		ycoord--;
-		if (ycoord < 0 || ycoord > 20 || EntityMap[xcoord][ycoord].DecayTimer != 0) { GameOver = true; }
+		HeadYCoord--;
+		GameOverCheck();
 	}
 	void MoveLeft()
 	{
-		xcoord--;
-		if (xcoord < 0 || xcoord > 20 || EntityMap[xcoord][ycoord].DecayTimer != 0) { GameOver = true; }
+		HeadXCoord--;
+		GameOverCheck();
 	}
 	void MoveRight()
 	{
-		xcoord++;
-		if (xcoord > 20 || xcoord < 0 || EntityMap[xcoord][ycoord].DecayTimer != 0) { GameOver = true; }
-
+		HeadYCoord++;
+		GameOverCheck();
 	}
-
-
-
 };
 
-class Food
+class Food :public CellEntity
 {
+private:
+	int MapCoordMinVal = 0;
+public:
+	void CoordGen() 
+	{
+		NumberGen()
+	}
 
-	std::random_device rd; // obtain a random number from hardware
-	std::mt19937 gen(rd()); // seed the generator
-	std::uniform_int_distribution<> distr(25, 63); // define the range
+	void CoordCheck()
+	{
 
+	}
 
 
 };
